@@ -8,9 +8,10 @@ Features:
 Toggelable Esp/Highlighting.
 Auto Reload Esp (if a player dies the script reloads that player).
 Change how many seconds a reload can happen.
-Unload Script
+Unload Script.
 
-Reccomended scripts(not mine)
+Recommended scripts(not mine):
+
 Universal Aimbot (by boicu377)
 
                               https://scriptblox.com/script/Universal-Script-Universal-aimbot-11648
