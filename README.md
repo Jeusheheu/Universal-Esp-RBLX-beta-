@@ -10,8 +10,8 @@ Auto Reload Esp (if a player dies the script reloads that player).
 Change how many seconds a reload can happen.
 Unload Script.
 
-Recommended scripts(not mine):
+Recommended scripts:
 
-Universal Aimbot (by boicu377)
+Universal Aimbot by me:
 
-                              https://scriptblox.com/script/Universal-Script-Universal-aimbot-11648
+                       loadstring(game:HttpGet("https://raw.githubusercontent.com/Jeusheheu/Universal-Esp-RBLX-beta-/main/aimbot.lua"))()    
