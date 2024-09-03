@@ -14,4 +14,4 @@ Recommended scripts:
 
 Universal Aimbot by me:
 
-                       loadstring(game:HttpGet("https://raw.githubusercontent.com/Jeusheheu/Universal-Esp-RBLX-beta-/main/aimbot.lua"))()    
+                       loadstring(game:HttpGet("https://raw.githubusercontent.com/Jeusheheu/Universal-Esp-RBLX-beta-/main/aimbot_v1.lua"))()    
