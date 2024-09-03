@@ -5,6 +5,7 @@ local UserInputService = game:GetService("UserInputService")
 
 -- Variables
 local localPlayer = Players.LocalPlayer
+local camera = game.Workspace.CurrentCamera
 local targetPlayer = nil
 local lockOnEnabled = false
 local lockOnActive = false  -- Indicates if lock-on is currently active (via RMB)
@@ -60,10 +61,13 @@ local function getNearestPlayer()
     return nearestPlayer
 end
 
--- Lock-On functionality
+-- Lock-On functionality (camera control)
 local function lockOn()
     if targetPlayer and targetPlayer.Character and targetPlayer.Character:FindFirstChild("HumanoidRootPart") then
-        localPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(localPlayer.Character.HumanoidRootPart.Position, targetPlayer.Character.HumanoidRootPart.Position)
+        local targetPosition = targetPlayer.Character.HumanoidRootPart.Position
+        local cameraPosition = camera.CFrame.Position
+        local newCFrame = CFrame.new(cameraPosition, targetPosition)
+        camera.CFrame = newCFrame
     end
 end
 
