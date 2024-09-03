@@ -1,0 +1,189 @@
+-- Services
+local Players = game:GetService("Players")
+local StarterGui = game:GetService("StarterGui")
+local RunService = game:GetService("RunService")
+
+-- Variables
+local highlightingEnabled = true
+local autoRehighlightEnabled = true
+local autoRehighlightInterval = 10  -- Default interval in seconds
+local guiTitle = "Player Highlight Toggle" -- Title of the GUI
+
+-- Create a UI container for the buttons (making it draggable)
+local screenGui = Instance.new("ScreenGui")
+screenGui.Name = "HighlightToggleGui"
+screenGui.ResetOnSpawn = false
+screenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+
+local draggableFrame = Instance.new("Frame")
+draggableFrame.Size = UDim2.new(0, 300, 0, 280)  -- Adjusted size to fit title and all buttons
+draggableFrame.Position = UDim2.new(0, 10, 0, 10)
+draggableFrame.BackgroundColor3 = Color3.new(0.1, 0.1, 0.1)
+draggableFrame.BackgroundTransparency = 0.3
+draggableFrame.Active = true  -- Allows the frame to be draggable
+draggableFrame.Draggable = true  -- Makes the frame draggable
+draggableFrame.Parent = screenGui
+
+local titleLabel = Instance.new("TextLabel")
+titleLabel.Size = UDim2.new(1, 0, 0, 40)  -- Title takes full width of the frame
+titleLabel.Position = UDim2.new(0, 0, 0, 0)
+titleLabel.Text = guiTitle
+titleLabel.TextScaled = true
+titleLabel.BackgroundColor3 = Color3.new(0.2, 0.2, 0.2)
+titleLabel.TextColor3 = Color3.new(1, 1, 1)
+titleLabel.Parent = draggableFrame
+
+local toggleButton = Instance.new("TextButton")
+toggleButton.Size = UDim2.new(0, 280, 0, 50)
+toggleButton.Position = UDim2.new(0, 10, 0, 50)  -- Positioned below the title
+toggleButton.Text = "Toggle Highlight: ON"
+toggleButton.TextScaled = true
+toggleButton.BackgroundColor3 = Color3.new(0, 0, 0)
+toggleButton.TextColor3 = Color3.new(1, 1, 1)
+toggleButton.Parent = draggableFrame
+
+local rehighlightButton = Instance.new("TextButton")
+rehighlightButton.Size = UDim2.new(0, 280, 0, 50)
+rehighlightButton.Position = UDim2.new(0, 10, 0, 110)  -- Positioned below the toggle button
+rehighlightButton.Text = "Re-highlight Players"
+rehighlightButton.TextScaled = true
+rehighlightButton.BackgroundColor3 = Color3.new(0, 0, 1)
+rehighlightButton.TextColor3 = Color3.new(1, 1, 1)
+rehighlightButton.Parent = draggableFrame
+
+local autoRehighlightButton = Instance.new("TextButton")
+autoRehighlightButton.Size = UDim2.new(0, 280, 0, 50)
+autoRehighlightButton.Position = UDim2.new(0, 10, 0, 170)  -- Positioned below the re-highlight button
+autoRehighlightButton.Text = "Auto Re-highlight: ON"
+autoRehighlightButton.TextScaled = true
+autoRehighlightButton.BackgroundColor3 = Color3.new(0, 1, 0)
+autoRehighlightButton.TextColor3 = Color3.new(1, 1, 1)
+autoRehighlightButton.Parent = draggableFrame
+
+local unloadButton = Instance.new("TextButton")
+unloadButton.Size = UDim2.new(0, 280, 0, 50)
+unloadButton.Position = UDim2.new(0, 10, 0, 230)  -- Positioned below the auto-rehighlight button
+unloadButton.Text = "Unload Script"
+unloadButton.TextScaled = true
+unloadButton.BackgroundColor3 = Color3.new(1, 0, 0)
+unloadButton.TextColor3 = Color3.new(1, 1, 1)
+unloadButton.Parent = draggableFrame
+
+-- Function to highlight a player's character
+local function highlightPlayer(character)
+    -- Check if the character already has a highlight
+    if character:FindFirstChild("Highlight") then
+        return
+    end
+
+    -- Create a new Highlight object
+    local highlight = Instance.new("Highlight")
+    highlight.Parent = character
+
+    -- Set properties for the highlight
+    highlight.FillColor = Color3.new(1, 1, 0) -- Yellow color
+    highlight.OutlineColor = Color3.new(0, 0, 0) -- Black outline
+    highlight.FillTransparency = 0.5
+    highlight.OutlineTransparency = 0
+
+    -- Attach the highlight to the player's character
+    highlight.Adornee = character
+end
+
+-- Function to handle player spawning and respawning
+local function onCharacterAdded(character)
+    if highlightingEnabled then
+        highlightPlayer(character)
+    end
+end
+
+-- Function to connect to all existing and future players
+local function setupPlayer(player)
+    -- Connect the CharacterAdded event to handle respawns
+    player.CharacterAdded:Connect(onCharacterAdded)
+
+    -- Highlight the player's character if it already exists
+    if player.Character then
+        onCharacterAdded(player.Character)
+    end
+end
+
+-- Re-highlight function
+local function rehighlightPlayers()
+    for _, player in pairs(Players:GetPlayers()) do
+        if player.Character then
+            local highlight = player.Character:FindFirstChild("Highlight")
+            if not highlight then
+                highlightPlayer(player.Character)
+            end
+        end
+    end
+end
+
+-- Auto Re-highlight loop
+local function autoRehighlightLoop()
+    while autoRehighlightEnabled do
+        rehighlightPlayers()
+        wait(autoRehighlightInterval)
+    end
+end
+
+-- Start the auto re-highlight loop
+spawn(autoRehighlightLoop)
+
+-- Toggle button function
+toggleButton.MouseButton1Click:Connect(function()
+    highlightingEnabled = not highlightingEnabled
+    toggleButton.Text = "Toggle Highlight: " .. (highlightingEnabled and "ON" or "OFF")
+
+    -- Remove or add highlights based on the toggle state
+    for _, player in pairs(Players:GetPlayers()) do
+        if player.Character then
+            local highlight = player.Character:FindFirstChild("Highlight")
+            if highlightingEnabled and not highlight then
+                highlightPlayer(player.Character)
+            elseif not highlightingEnabled and highlight then
+                highlight:Destroy()
+            end
+        end
+    end
+end)
+
+-- Re-highlight button function
+rehighlightButton.MouseButton1Click:Connect(rehighlightPlayers)
+
+-- Auto Re-highlight toggle button function
+autoRehighlightButton.MouseButton1Click:Connect(function()
+    autoRehighlightEnabled = not autoRehighlightEnabled
+    autoRehighlightButton.Text = "Auto Re-highlight: " .. (autoRehighlightEnabled and "ON" or "OFF")
+
+    if autoRehighlightEnabled then
+        spawn(autoRehighlightLoop)  -- Restart the loop if it was turned back on
+    end
+end)
+
+-- Unload button function
+unloadButton.MouseButton1Click:Connect(function()
+    -- Remove highlights from all players
+    for _, player in pairs(Players:GetPlayers()) do
+        if player.Character then
+            local highlight = player.Character:FindFirstChild("Highlight")
+            if highlight then
+                highlight:Destroy()
+            end
+        end
+    end
+
+    -- Remove the GUI
+    screenGui:Destroy()
+end)
+
+-- Connect to all players currently in the game
+for _, player in pairs(Players:GetPlayers()) do
+    setupPlayer(player)
+end
+
+-- Connect to any new players that join the game
+Players.PlayerAdded:Connect(function(player)
+    setupPlayer(player)
+end)
