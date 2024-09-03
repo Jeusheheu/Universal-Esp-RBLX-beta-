@@ -2,7 +2,7 @@ Its still in beta, so expect bugs and goofy shit that is going to happen. (this 
 
 Loadstring:
 
-         loadstring(game:HttpGet("https://raw.githubusercontent.com/Jeusheheu/Universal-Esp-RBLX-beta-/main/ScriptBeta1.lua"))()
+         loadstring(game:HttpGet("https://raw.githubusercontent.com/Jeusheheu/Universal-Esp-RBLX-beta-/main/ScriptBeta2.lua"))()
 
 Features:
 Toggelable Esp/Highlighting.
