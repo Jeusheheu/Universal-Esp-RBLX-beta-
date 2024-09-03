@@ -16,7 +16,7 @@ screenGui.ResetOnSpawn = false
 screenGui.Parent = localPlayer:WaitForChild("PlayerGui")
 
 local draggableFrame = Instance.new("Frame")
-draggableFrame.Size = UDim2.new(0, 200, 0, 100)
+draggableFrame.Size = UDim2.new(0, 200, 0, 150)
 draggableFrame.Position = UDim2.new(0, 10, 0, 10)
 draggableFrame.BackgroundColor3 = Color3.new(0.1, 0.1, 0.1)
 draggableFrame.BackgroundTransparency = 0.3
@@ -32,6 +32,15 @@ toggleButton.TextScaled = true
 toggleButton.BackgroundColor3 = Color3.new(0, 0, 0)
 toggleButton.TextColor3 = Color3.new(1, 1, 1)
 toggleButton.Parent = draggableFrame
+
+local destroyButton = Instance.new("TextButton")
+destroyButton.Size = UDim2.new(0, 180, 0, 50)
+destroyButton.Position = UDim2.new(0, 10, 0, 85)
+destroyButton.Text = "Destroy GUI"
+destroyButton.TextScaled = true
+destroyButton.BackgroundColor3 = Color3.new(0.5, 0, 0)
+destroyButton.TextColor3 = Color3.new(1, 1, 1)
+destroyButton.Parent = draggableFrame
 
 -- Function to find the nearest player
 local function getNearestPlayer()
@@ -84,6 +93,11 @@ end)
 toggleButton.MouseButton1Click:Connect(function()
     lockOnEnabled = not lockOnEnabled
     toggleButton.Text = "Lock-On: " .. (lockOnEnabled and "ON" or "OFF")
+end)
+
+-- Destroy button function
+destroyButton.MouseButton1Click:Connect(function()
+    screenGui:Destroy()
 end)
 
 -- Update the lock-on every frame
