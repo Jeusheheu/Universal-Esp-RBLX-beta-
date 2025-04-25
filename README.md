@@ -2,7 +2,7 @@ Its still in beta, so expect bugs and goofy shit that is going to happen. (this 
 
 Loadstring:
 
-         loadstring(game:HttpGet("https://raw.githubusercontent.com/Jeusheheu/Universal-Esp-RBLX-beta-/main/ScriptBeta2.lua"))()
+         loadstring(game:HttpGet("https://raw.githubusercontent.com/Jeusheheu/Universal-Esp-RBLX-beta-/main/ScriptBeta3.lua"))()
 
 Features:
 Toggelable Esp/Highlighting.
@@ -14,4 +14,4 @@ Recommended scripts:
 
 Universal Aimbot by me:
 
-                       loadstring(game:HttpGet("https://raw.githubusercontent.com/Jeusheheu/Universal-Esp-RBLX-beta-/main/aimbot_v1.lua"))()    
+         loadstring(game:HttpGet("https://raw.githubusercontent.com/Jeusheheu/Universal-Esp-RBLX-beta-/main/aimbot_v2.lua"))()    
