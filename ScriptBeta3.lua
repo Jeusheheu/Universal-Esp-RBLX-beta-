@@ -122,6 +122,13 @@ local function highlightPlayer(character)
     end
 end
 
+-- Function to remove name tags from a player's character
+local function removeNameTag(character)
+    if character:FindFirstChild("NameTag") then
+        character.NameTag:Destroy()
+    end
+end
+
 -- Function to handle character addition
 local function onCharacterAdded(character)
     if highlightingEnabled then
@@ -148,5 +155,83 @@ end
 
 -- Auto Re-highlight loop
 local autoRehighlightConnection
-local function startAutoRehighlight
-::contentReference[oaicite:5]{index=5}
+local function startAutoRehighlight()
+    if autoRehighlightConnection then
+        autoRehighlightConnection:Disconnect()
+    end
+
+    autoRehighlightConnection = RunService.Heartbeat:Connect(function()
+        if autoRehighlightEnabled then
+            rehighlightPlayers()
+        end
+    end)
+end
+
+-- Toggle highlight feature
+toggleButton.MouseButton1Click:Connect(function()
+    highlightingEnabled = not highlightingEnabled
+    toggleButton.Text = highlightingEnabled and "Toggle Highlight: ON" or "Toggle Highlight: OFF"
+    if not highlightingEnabled then
+        for _, player in pairs(Players:GetPlayers()) do
+            if player.Character and player.Character:FindFirstChild("Highlight") then
+                player.Character.Highlight:Destroy()
+            end
+        end
+    end
+end)
+
+-- Rehighlight all players
+rehighlightButton.MouseButton1Click:Connect(function()
+    rehighlightPlayers()
+end)
+
+-- Auto Rehighlight Toggle
+autoRehighlightButton.MouseButton1Click:Connect(function()
+    autoRehighlightEnabled = not autoRehighlightEnabled
+    autoRehighlightButton.Text = autoRehighlightEnabled and "Auto Re-highlight: ON" or "Auto Re-highlight: OFF"
+    if autoRehighlightEnabled then
+        startAutoRehighlight()
+    else
+        if autoRehighlightConnection then
+            autoRehighlightConnection:Disconnect()
+        end
+    end
+end)
+
+-- Show Names Toggle
+showNamesButton.MouseButton1Click:Connect(function()
+    showNamesEnabled = not showNamesEnabled
+    showNamesButton.Text = showNamesEnabled and "Show Names: ON" or "Show Names: OFF"
+
+    -- Add or remove NameTags for all players
+    for _, player in pairs(Players:GetPlayers()) do
+        if player.Character then
+            if showNamesEnabled then
+                highlightPlayer(player.Character) -- This will add the name tag if not already present
+            else
+                removeNameTag(player.Character) -- Remove the name tag if showNames is off
+            end
+        end
+    end
+end)
+
+-- Unload Script (Ensure highlights and name tags are removed)
+unloadButton.MouseButton1Click:Connect(function()
+    -- Destroy all highlights and name tags before unloading the script
+    for _, player in pairs(Players:GetPlayers()) do
+        if player.Character then
+            if player.Character:FindFirstChild("Highlight") then
+                player.Character.Highlight:Destroy()
+            end
+            removeNameTag(player.Character)
+        end
+    end
+    screenGui:Destroy()
+end)
+
+-- Setup Players
+for _, player in pairs(Players:GetPlayers()) do
+    setupPlayer(player)
+end
+
+Players.PlayerAdded:Connect(setupPlayer)
